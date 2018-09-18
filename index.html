@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Calcular horas</h2>
+        <input class="time" id="hh1" type="time" value="08:00">
+        <input class="time" id="hh2" type="time" value="12:00">
+        <input class="time" id="hh3" type="time" value="13:30">
+        <input class="button" type="button" onclick="time()" value="Calcular">
+        <br/>
+        <div class="box" id="resultado" />
+    </div>
+</body>
+<script>
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').then((registration) => {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch((err) => {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+
+    const conv = (val) => {
+        return `${Math.floor(val/60)}`.padStart(2, "0") + ":" + `${(val%60)}`.padStart(2, "0");
+    }
+    const sub = (val1, val2) => {
+        const t1 = val1.split(':').map(v => +v);
+        const t2 = val2.split(':').map(v => +v);
+        return conv((t1[0]-t2[0])*60+t1[1]-t2[1]);      
+    };
+    const add = (val1, val2) => {
+        const t1 = val1.split(':').map(v => +v);
+        const t2 = val2.split(':').map(v => +v);
+        return conv((t1[0]+t2[0])*60+t1[1]+t2[1]);      
+    };
+    const time = () => {
+        const h1 = document.querySelector("#hh1").value;
+        const h2 = document.querySelector("#hh2").value;
+        const h3 = document.querySelector("#hh3").value;
+        
+        const f = sub(h2, h1); //MANHA
+        const now = new Date();
+        const h4 = now.getHours()+":"+now.getMinutes();
+        const f2 = sub(h4, h3); //TARDE
+        const falta = sub('8:48', add(f2, f));
+
+        const str = `Trabalhado: ${f} hh:mm <br />
+        Falta: ${falta} hh:mm  <br />
+        Tchau: ${add(sub('8:38', f), h3)} hh:mm`
+        document.querySelector("#resultado").innerHTML = str;
+    }
+</script>
+</html>
