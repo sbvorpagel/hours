@@ -4,18 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
     <title>Document</title>
+	<style>
+		body {
+			display: flex;
+			justify-content: center;
+			background-color: #EEEEEE;
+		}
+
+		h2 {
+			align-self: center;
+			color: #009688;
+		}
+		
+		h4 {
+			align-self: center;
+			color: #009688;
+		}
+		
+		b {
+			margin: 2px;
+		}
+
+		.container {
+			width: 50%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.time {
+			padding: 2px;
+		}
+
+		.button {
+			background-color: #009688;
+			color: #F5F5F5;
+			padding: 8px;
+			border-width: 0;
+			outline: none;
+			border-radius: 2px;
+			box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+			transition: background-color .3s;
+		}
+
+	</style>
 </head>
 <body>
     <div class="container">
         <h2>Calcular horas</h2>
-        <input class="time" id="hh1" type="time" value="08:00">
-        <input class="time" id="hh2" type="time" value="12:00">
-        <input class="time" id="hh3" type="time" value="13:30">
-        <input class="button" type="button" onclick="time()" value="Calcular">
-        <br/>
-        <div class="box" id="resultado" />
+		<h3>Quantas horas que deseja trabalhar ?</h3>
+
+		<input class="time" id="quantidadeDeHoras" type="time" value="08:48">
+		<b>Hora de entrada: </b>
+		<input class="time" id="horaEntrada" type="time" value="08:00">
+		<b>Hora de saída para o almoço: </b>
+		<input class="time" id="horaSaidaAlmoco" type="time" value="12:00">
+		<b>Hora de retorno do almoço: </b>
+        <input class="time" id="horaRetornoAlmoco" type="time" value="13:30">
+		<br>
+        
+        
+		
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="time()">
+		  Calcular
+		</button>
+
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h2 class="modal-title" id="exampleModalLabel">Alegria :D</h2>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				  <span aria-hidden="true">&times;</span>
+				</button>
+			  </div>
+			  <div id="resultado" />
+			</div>
+		  </div>
+		</div>
+
+
     </div>
 </body>
 <script>
@@ -46,19 +122,20 @@
         return conv((t1[0]+t2[0])*60+t1[1]+t2[1]);      
     };
     const time = () => {
-        const h1 = document.querySelector("#hh1").value;
-        const h2 = document.querySelector("#hh2").value;
-        const h3 = document.querySelector("#hh3").value;
+        const horaEntrada = document.querySelector("#horaEntrada").value;
+        const horaSaidaAlmoco = document.querySelector("#horaSaidaAlmoco").value;
+        const horaRetornoAlmoco = document.querySelector("#horaRetornoAlmoco").value;
+		const quantidadeDeHoras = document.querySelector("#quantidadeDeHoras").value;
         
-        const f = sub(h2, h1); //MANHA
+        const f = sub(horaSaidaAlmoco, horaEntrada); //MANHA
         const now = new Date();
-        const h4 = now.getHours()+":"+now.getMinutes();
-        const f2 = sub(h4, h3); //TARDE
-        const falta = sub('8:48', add(f2, f));
+        const horasAgora = now.getHours()+":"+now.getMinutes();
+        const f2 = sub(horasAgora, horaRetornoAlmoco); //TARDE
+        const falta = sub(quantidadeDeHoras, add(f2, f));
 
-        const str = `Trabalhado: ${f} hh:mm <br />
+        const str = `<h4>Trabalhado: ${f} hh:mm <br />
         Falta: ${falta} hh:mm  <br />
-        Tchau: ${add(sub('8:38', f), h3)} hh:mm`
+        Tchau: ${add(sub(quantidadeDeHoras, f), horaRetornoAlmoco)} hh:mm </h4>`;
         document.querySelector("#resultado").innerHTML = str;
     }
 </script>
